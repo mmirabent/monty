@@ -8,7 +8,7 @@ unsigned long uniform_random(unsigned long size);
 char* reset_doors(char* byob)
 {       
         // Set the "good" door, use lots of entropy while doing it
-        unsigned int good = (unsigned int)uniform_random(3);
+        unsigned good = (unsigned)uniform_random(3);
         
         // setup the doors for the contestant to choose from
         byob[good] = 1;
@@ -67,9 +67,6 @@ int main(int argc, char** argv)
         // tells random() to use the /dev/urandom device for seeding
         srandomdev();
         
-        // FIXME: just testing
-        uniform_random(3);
-        
         // Allocate the set of doors, the win flag and the win tally
         char* doors = malloc((size_t)3);
         char win;
@@ -82,7 +79,7 @@ int main(int argc, char** argv)
                 reset_doors(doors);
                 
                 // contestant chooses a door
-                unsigned int guess = arc4random_uniform(3);
+                unsigned guess = (unsigned)uniform_random(3);
                 
                 // doors set to -1 are not considered for a win by the
                 // contestant. Since this guess will be thrown away we will set
