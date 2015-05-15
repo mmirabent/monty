@@ -39,28 +39,38 @@ unsigned long uniform_random(unsigned long range) {
 
 int main(int argc, char** argv)
 {
+        // if wrong number of command line arguments
         if(argc != 2) {
                 fprintf(stderr, "Monty hall problem simulator v1.0\nUsage %s <number of runs>\n", argv[0]);
                 return 1;
         }
         
+        // make an end pointer so we can check if strtol actually found a long
         char** end = malloc(sizeof(char*));
         
         long RUNS = strtol(argv[1], end, 0);
+        
+        /* if strtol was unable to find a number to convert, *end will point to
+        the same string as argv[1] */
+        
         if(strcmp(argv[1], *end) == 0) {
                 fprintf(stderr, "argument must be a positive integer\n");
                 return 2;
         }
         
+        // Finally if somebody gives us a negative number or zero
         if(RUNS <= 0) {
                 fprintf(stderr, "argument must be a positive integer\n");
                 return 3;
         }
         
+        // tells random() to use the /dev/urandom device for seeding
         srandomdev();
         
+        // FIXME: just testing
         uniform_random(3);
         
+        // Allocate the set of doors, the win flag and the win tally
         char* doors = malloc((size_t)3);
         char win;
         int win_tally = 0;
@@ -76,9 +86,12 @@ int main(int argc, char** argv)
                 
                 // doors set to -1 are not considered for a win by the
                 // contestant. Since this guess will be thrown away we will set
-                // the door to -1 "revealing" it, but not really considering it.
+                // the door to -1
                 doors[guess] = -1;
                 
+                
+                /* FIXME: Currently, this prefers low indexed doors, should be
+                random */
                 // Let me reveal a bad door for you
                 if(doors[0] == 0) {
                         doors[0] = -1; // door is "revealed"
@@ -89,7 +102,7 @@ int main(int argc, char** argv)
                 }
                 
                 // Did you win? If you won, the array will contain two -1's and 
-                // a 1. If you lost, it will contain two -1's and a 0. Simpley
+                // a 1. If you lost, it will contain two -1's and a 0. Simply
                 // checking for a 1 is sufficient to determine a win
                 if(doors[0] == 1)
                         win = 1;
